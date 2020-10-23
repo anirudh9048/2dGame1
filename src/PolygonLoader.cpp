@@ -10,7 +10,7 @@ PolygonLoader::~PolygonLoader() {
 }
 
 int PolygonLoader::initPolygonLoader() {
-    const char *vertexSource = read_shader_from_source("shaders/v1.vert");
+    const char *vertexSource = read_shader_from_source("shaders/v2matrix.vert");
     const char *fragmentSource = read_shader_from_source("shaders/f1.frag");
 	
 
@@ -40,7 +40,8 @@ int PolygonLoader::initPolygonLoader() {
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
 
-    glBindAttribLocation(shaderProgram, 0, "in_Position");
+    glBindAttribLocation(shaderProgram, 0, "world_pos");
+    glBindAttribLocation(shaderProgram, 1, "camera_pos");
 
     glLinkProgram(shaderProgram);
 
@@ -92,18 +93,17 @@ int PolygonLoader::renderTriangleAt(float x, float y) {
     return 0;
 }
 
+// Render at world coordinate
 int PolygonLoader::renderQuadAt(float x, float y) {
     glClear(GL_COLOR_BUFFER_BIT);
-    this->xCoord = x;
-    this->yCoord = y;
-    this->vertices[0] = this->xCoord - this->scale;
-    this->vertices[1] = this->yCoord - this->scale;
-    this->vertices[2] = this->xCoord - this->scale;
-    this->vertices[3] = this->yCoord + this->scale;
-    this->vertices[4] = this->xCoord + this->scale;
-    this->vertices[5] = this->yCoord - this->scale;
-    this->vertices[6] = this->xCoord + this->scale;
-    this->vertices[7] = this->yCoord + this->scale;
+    this->vertices[0] = x - this->scale;
+    this->vertices[1] = y - this->scale;
+    this->vertices[2] = x - this->scale;
+    this->vertices[3] = y + this->scale;
+    this->vertices[4] = x + this->scale;
+    this->vertices[5] = y - this->scale;
+    this->vertices[6] = x + this->scale;
+    this->vertices[7] = y + this->scale;
     glBufferData(GL_ARRAY_BUFFER, this->NUM_VERTICES * sizeof(float), this->vertices, GL_DYNAMIC_DRAW);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     return 0;
@@ -111,9 +111,11 @@ int PolygonLoader::renderQuadAt(float x, float y) {
 
 
 int PolygonLoader::setCameraCoordinate(float x, float y) {
-    this->xCoord = x;
-    this->yCoord = y;
+    this->camera_x = x;
+    this->camera_y = y;
     // update the shader here
+    float arr[2] = {x, y};
+    glVertexAttrib2fv(1, arr);
     return 0;
 }
 
