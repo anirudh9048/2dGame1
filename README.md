@@ -32,3 +32,6 @@ Put the following matrix into a shader:
 (p_x, p_y) is the camera position (which also happens to be the player position).
 
 How do we pass in the camera_pos vertex attribute to the shader? https://www.informit.com/articles/article.aspx?p=2429029
+
+Seems to be ok. Up next: draw multiple rectangles to the screen.
+Need to fill one VBO with the vertices for many rectangles.

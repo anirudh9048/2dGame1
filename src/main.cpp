@@ -82,9 +82,9 @@ int main() {
     std::shared_ptr<PolygonLoader> polygonLoader = std::make_shared<PolygonLoader>();
     polygonLoader->initPolygonLoader();
 
-    polygonLoader->setCameraCoordinate(-0.2f, 0.5f);
+    polygonLoader->setCameraCoordinate(0.0f, 0.5f);
 
-    polygonLoader->renderQuadAtWorldCoord(-0.2f, 0.5f);
+    polygonLoader->renderQuadAtWorldCoord(-0.2f, 0.5f, 0);
     
     SDL_GL_SwapWindow(window->getSdlWindow());
 

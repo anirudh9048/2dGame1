@@ -119,10 +119,31 @@ int PolygonLoader::setCameraCoordinate(float x, float y) {
     return 0;
 }
 
-int PolygonLoader::renderQuadAtWorldCoord(float x, float y) {
+int PolygonLoader::renderQuadAtWorldCoord(float x, float y, int quad_id) {
     // the data that goes into the shader is in terms of world coordinates
     // for now call the renderQuadAt method
     // we'll see if there is a shader to do this later on.
     renderQuadAt(x,y);
     return 0;
 }
+
+void PolygonLoader::addQuadToVertexBuffer(quad_t quad) {
+    
+}
+
+int PolygonLoader::addQuadAt(float x, float y) {
+    int new_idx = this->quads.size();
+    quad_t new_quad;
+    new_quad.quad_id = new_idx;
+    new_quad.vertices[0].x = x - this->scale;
+    new_quad.vertices[0].y = y - this->scale;
+    new_quad.vertices[1].x = x - this->scale;
+    new_quad.vertices[1].y = y + this->scale;
+    new_quad.vertices[2].x = x + this->scale;
+    new_quad.vertices[2].y = y - this->scale;
+    new_quad.vertices[3].x = x + this->scale;
+    new_quad.vertices[3].y = y + this->scale;
+    this->quads.push_back(new_quad);
+    this->addQuadToVertexBuffer(new_quad);
+    return new_idx;
+}   
