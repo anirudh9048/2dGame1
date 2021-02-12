@@ -9,6 +9,9 @@
 #include <OpenGL/gl3.h>
 #include <OpenGL/gl3ext.h>
 
+#define LOG_ENABLED
+#include "Log.h"
+
 class PolygonLoader {
 public:
     PolygonLoader();
@@ -29,6 +32,9 @@ private:
         quad_vertex_t vertices[4];
     } quad_t;
     
+    void printQuad(quad_t quad);
+    void printFloatArr(float f[], int size);
+
     void addQuadToVertexBuffer(quad_t quad);
 
     const char* read_shader_from_source(std::string filename);
@@ -38,7 +44,7 @@ private:
 
     std::vector<quad_t> quads;
 
-    const int NUM_VERTICES = 16; // actual number of vertices is this div by 2? 8
+    int NUM_VERTICES = 8; // actual number of vertices is this div by 2? 8 const?
     float scale = 0.1f;
     float *vertices;
     GLuint vertexShader;

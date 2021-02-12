@@ -2,13 +2,11 @@
 
 
 Window::Window(int x, int y, int w, int h, std::string n) {
-    std::cout << "Window ctor\n";
     this->xc = x;
     this->yc = y;
     this->width = w;
     this->height = h;
     this->name = n;
-    std::cout << "Returning from window ctor\n";
 }
 
 
@@ -30,9 +28,7 @@ SDL_Window* Window::getSdlWindow() {
 }
 
 Window::~Window() {
-    std::cout << "Window dtor\n";
     if (this->context != nullptr) {
-        std::cout << "context void * " << this->context << std::endl; 
         SDL_GL_DeleteContext(this->context);
     }
 }

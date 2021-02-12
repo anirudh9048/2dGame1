@@ -127,8 +127,25 @@ int PolygonLoader::renderQuadAtWorldCoord(float x, float y, int quad_id) {
     return 0;
 }
 
-void PolygonLoader::addQuadToVertexBuffer(quad_t quad) {
-    
+void PolygonLoader::addQuadToVertexBuffer(PolygonLoader::quad_t quad) {
+    LOG("addQuadToVertexBuffer");
+    printFloatArr(this->vertices, this->NUM_VERTICES);
+    float *updated_vertices = new float[this->NUM_VERTICES + 8]; // +8 for the new vertices, 2 per vertex
+    std::memcpy(updated_vertices, this->vertices, this->NUM_VERTICES * sizeof(float));
+    int i = this->NUM_VERTICES;
+    int j = 0;
+    for (; i < this->NUM_VERTICES + 8; i+=2) {
+        updated_vertices[i] = quad.vertices[j].x;
+        updated_vertices[i+1] = quad.vertices[j].y;
+        j++;
+    }
+    printFloatArr(updated_vertices, this->NUM_VERTICES + 8);
+    float* old_vertices = this->vertices;
+    this->vertices = updated_vertices;
+    this->NUM_VERTICES = this->NUM_VERTICES + 8;
+    glBufferData(GL_ARRAY_BUFFER, this->NUM_VERTICES * sizeof(float), this->vertices, GL_DYNAMIC_DRAW);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 8);
+    delete [] old_vertices;
 }
 
 int PolygonLoader::addQuadAt(float x, float y) {
@@ -147,3 +164,20 @@ int PolygonLoader::addQuadAt(float x, float y) {
     this->addQuadToVertexBuffer(new_quad);
     return new_idx;
 }   
+
+void PolygonLoader::printQuad(quad_t quad) {
+    std::string str = std::to_string(quad.quad_id) + ": \n";
+    for (quad_vertex_t q : quad.vertices) {
+        str += std::to_string(q.x) + "," + std::to_string(q.y);
+        str += "\n";
+    }
+    LOG(str);
+}
+
+ void PolygonLoader::printFloatArr(float f[], int size) {
+    std::string s = ""; 
+    for (int i = 0; i < size; i++) {
+        s += std::to_string(f[i]) + ", ";
+    }
+    LOG(s);
+ }

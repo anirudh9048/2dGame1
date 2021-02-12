@@ -85,6 +85,8 @@ int main() {
     polygonLoader->setCameraCoordinate(0.0f, 0.5f);
 
     polygonLoader->renderQuadAtWorldCoord(-0.2f, 0.5f, 0);
+
+    int second_quad = polygonLoader->addQuadAt(0.3f, 0.3f);
     
     SDL_GL_SwapWindow(window->getSdlWindow());
 
