@@ -119,11 +119,14 @@ int PolygonLoader::setCameraCoordinate(float x, float y) {
     return 0;
 }
 
-int PolygonLoader::renderQuadAtWorldCoord(float x, float y, int quad_id) {
+int PolygonLoader::renderQuadAtWorldCoord(int quad_id) {
     // the data that goes into the shader is in terms of world coordinates
     // for now call the renderQuadAt method
     // we'll see if there is a shader to do this later on.
-    //todo under construction
+    // first get the vao to bind 
+    quad_t q = this->quads[quad_id];
+    glBindVertexArray(q.vao_id);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     return 0;
 }
 

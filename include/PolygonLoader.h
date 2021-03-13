@@ -18,7 +18,7 @@ public:
     ~PolygonLoader();
     int initPolygonLoader();
 
-    int renderQuadAtWorldCoord(float x, float y, int quad_id);
+    int renderQuadAtWorldCoord(int quad_id);
     int setCameraCoordinate(float x, float y);
     int addQuadAt(float x, float y); // returns the quad_id to the caller
     int renderQuadAt(float x, float y);
