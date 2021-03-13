@@ -23,13 +23,13 @@ int PolygonLoader::initPolygonLoader() {
     GLuint vbo;
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glEnableVertexAttribArray(0);
+
     glBufferData(GL_ARRAY_BUFFER, this->NUM_VERTICES * sizeof(float), this->vertices, GL_DYNAMIC_DRAW);
 
     
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
     
-    glEnableVertexAttribArray(0);
-
     
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     compile_shader(vertexShader, vertexSource);
@@ -123,29 +123,28 @@ int PolygonLoader::renderQuadAtWorldCoord(float x, float y, int quad_id) {
     // the data that goes into the shader is in terms of world coordinates
     // for now call the renderQuadAt method
     // we'll see if there is a shader to do this later on.
-    renderQuadAt(x,y);
+    //todo under construction
     return 0;
 }
 
-void PolygonLoader::addQuadToVertexBuffer(PolygonLoader::quad_t quad) {
-    LOG("addQuadToVertexBuffer");
-    printFloatArr(this->vertices, this->NUM_VERTICES);
-    float *updated_vertices = new float[this->NUM_VERTICES + 8]; // +8 for the new vertices, 2 per vertex
-    std::memcpy(updated_vertices, this->vertices, this->NUM_VERTICES * sizeof(float));
-    int i = this->NUM_VERTICES;
-    int j = 0;
-    for (; i < this->NUM_VERTICES + 8; i+=2) {
-        updated_vertices[i] = quad.vertices[j].x;
-        updated_vertices[i+1] = quad.vertices[j].y;
-        j++;
-    }
-    printFloatArr(updated_vertices, this->NUM_VERTICES + 8);
-    float* old_vertices = this->vertices;
-    this->vertices = updated_vertices;
-    this->NUM_VERTICES = this->NUM_VERTICES + 8;
-    glBufferData(GL_ARRAY_BUFFER, this->NUM_VERTICES * sizeof(float), this->vertices, GL_DYNAMIC_DRAW);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 8);
-    delete [] old_vertices;
+// this function is a bit of a misnomer
+// this should really be adding a new vertex buffer (along with new VAO) ???
+int PolygonLoader::addQuadToVertexBuffer(PolygonLoader::quad_t quad) {
+    GLuint vao_new = 1; //the initialization really shouldn't matter; double check this
+    glGenVertexArrays(1, &vao_new);
+    glBindVertexArray(vao_new);
+
+    GLuint vbo_new;
+    glGenBuffers(1, &vbo_new);
+
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_new);
+
+    glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(float), quad.heap_vertex_data, GL_DYNAMIC_DRAW);
+
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+    return vao_new;
 }
 
 int PolygonLoader::addQuadAt(float x, float y) {
@@ -160,8 +159,11 @@ int PolygonLoader::addQuadAt(float x, float y) {
     new_quad.vertices[2].y = y - this->scale;
     new_quad.vertices[3].x = x + this->scale;
     new_quad.vertices[3].y = y + this->scale;
+    new_quad.heap_vertex_data = new float[8]; //todo replace with constant
+    std::memcpy(new_quad.heap_vertex_data, new_quad.vertices, 8);
+    int n_vao = this->addQuadToVertexBuffer(new_quad);
+    new_quad.vao_id = n_vao;
     this->quads.push_back(new_quad);
-    this->addQuadToVertexBuffer(new_quad);
     return new_idx;
 }   
 

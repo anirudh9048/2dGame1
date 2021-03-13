@@ -21,6 +21,7 @@ public:
     int renderQuadAtWorldCoord(float x, float y, int quad_id);
     int setCameraCoordinate(float x, float y);
     int addQuadAt(float x, float y); // returns the quad_id to the caller
+    int renderQuadAt(float x, float y);
 private:
     typedef struct quad_vertex {
         float x;
@@ -30,17 +31,18 @@ private:
     typedef struct quad {
         int quad_id;
         quad_vertex_t vertices[4];
+        float *heap_vertex_data;
+        GLuint vao_id;
     } quad_t;
     
     void printQuad(quad_t quad);
     void printFloatArr(float f[], int size);
 
-    void addQuadToVertexBuffer(quad_t quad);
+    int addQuadToVertexBuffer(quad_t quad);
 
     const char* read_shader_from_source(std::string filename);
     int compile_shader(int shader, const char *src);
     int renderTriangleAt(float x, float y);
-    int renderQuadAt(float x, float y);
 
     std::vector<quad_t> quads;
 
