@@ -163,7 +163,12 @@ int PolygonLoader::addQuadAt(float x, float y) {
     new_quad.vertices[3].x = x + this->scale;
     new_quad.vertices[3].y = y + this->scale;
     new_quad.heap_vertex_data = new float[8]; //todo replace with constant
-    std::memcpy(new_quad.heap_vertex_data, new_quad.vertices, 8);
+    int index = 0;
+    for (int i = 0; i < 4; i++) {
+        new_quad.heap_vertex_data[index++] = new_quad.vertices[i].x;
+        new_quad.heap_vertex_data[index++] = new_quad.vertices[i].y;
+    }
+    printFloatArr(new_quad.heap_vertex_data, 8);
     int n_vao = this->addQuadToVertexBuffer(new_quad);
     new_quad.vao_id = n_vao;
     this->quads.push_back(new_quad);
