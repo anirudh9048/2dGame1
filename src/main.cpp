@@ -86,9 +86,13 @@ int main() {
 
     polygonLoader->renderQuadAt(0.2f, 0.5f);
 
-    int second_quad = polygonLoader->addQuadAt(0.3f, 0.3f);
+    int second_quad = polygonLoader->addQuadAt(0.3f, 0.9f);
 
     polygonLoader->renderQuadAtWorldCoord(second_quad);
+
+    int third_quad = polygonLoader->addQuadAt(0.4f, -0.4f);
+
+    polygonLoader->renderQuadAtWorldCoord(third_quad);
     
     SDL_GL_SwapWindow(window->getSdlWindow());
 
