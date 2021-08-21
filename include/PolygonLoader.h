@@ -22,6 +22,8 @@ public:
     int setCameraCoordinate(float x, float y);
     int addQuadAt(float x, float y); // returns the quad_id to the caller
     int renderQuadAt(float x, float y);
+
+    int moveQuadTo(int quad_vao_id, float x, float y);
 private:
     typedef struct quad_vertex {
         float x;

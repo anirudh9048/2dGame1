@@ -78,24 +78,14 @@ int main() {
 
     glClearColor(0,0,1,1);
     glClear(GL_COLOR_BUFFER_BIT);
-    SDL_GL_SwapWindow(window->getSdlWindow());
     std::shared_ptr<PolygonLoader> polygonLoader = std::make_shared<PolygonLoader>();
     polygonLoader->initPolygonLoader();
 
-    polygonLoader->setCameraCoordinate(0.0f, 0.5f);
-
-    polygonLoader->renderQuadAt(0.2f, 0.5f);
+    polygonLoader->setCameraCoordinate(0.0f, 0.0f);
 
     int second_quad = polygonLoader->addQuadAt(0.3f, 0.9f);
 
-    polygonLoader->renderQuadAtWorldCoord(second_quad);
-
     int third_quad = polygonLoader->addQuadAt(0.4f, -0.4f);
-
-    polygonLoader->renderQuadAtWorldCoord(third_quad);
-    
-    SDL_GL_SwapWindow(window->getSdlWindow());
-
 
     SDL_Event e;
     bool quit = false;
@@ -107,7 +97,18 @@ int main() {
             if (e.type == SDL_MOUSEBUTTONDOWN){
                 quit = true;
             }
+            if (e.type == SDL_KEYDOWN) {
+                LOG("SDL KEYDOWN received");
+                if (e.key.keysym.sym == SDLK_LEFT) {
+                    LOG("moving rectangle");
+                    polygonLoader->moveQuadTo(second_quad, -0.1f, -0.1f);
+                }
+            }
         }
+        glClear(GL_COLOR_BUFFER_BIT);
+        polygonLoader->renderQuadAtWorldCoord(second_quad);
+        polygonLoader->renderQuadAtWorldCoord(third_quad);
+        SDL_GL_SwapWindow(window->getSdlWindow());
     }
     return 0;
 }
