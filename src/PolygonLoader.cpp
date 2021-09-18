@@ -125,7 +125,6 @@ int PolygonLoader::renderQuadAtWorldCoord(int quad_id) {
     // we'll see if there is a shader to do this later on.
     // first get the vao to bind 
     quad_t q = this->quads[quad_id];
-    LOG("Binding " + std::to_string(quad_id));
     glBindVertexArray(q.vao_id);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     glBindVertexArray(0);
@@ -134,7 +133,7 @@ int PolygonLoader::renderQuadAtWorldCoord(int quad_id) {
 
 // this function is a bit of a misnomer
 // this should really be adding a new vertex buffer (along with new VAO) ???
-int PolygonLoader::addQuadToVertexBuffer(PolygonLoader::quad_t quad) {
+void PolygonLoader::addQuadToVertexBuffer(PolygonLoader::quad_t& quad) {
     GLuint vao_new = 1; //the initialization really shouldn't matter; double check this
     glGenVertexArrays(1, &vao_new);
     glBindVertexArray(vao_new);
@@ -149,13 +148,20 @@ int PolygonLoader::addQuadToVertexBuffer(PolygonLoader::quad_t quad) {
 
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
-    return vao_new;
+    glBindVertexArray(0);
+
+    quad.vao_id = vao_new;
+    quad.vbo_id = vbo_new;
+
+    return;
 }
 
 int PolygonLoader::addQuadAt(float x, float y) {
     int new_idx = this->quads.size();
     quad_t new_quad;
     new_quad.quad_id = new_idx;
+    new_quad.center_x = x;
+    new_quad.center_y = y;
     new_quad.vertices[0].x = x - this->scale;
     new_quad.vertices[0].y = y - this->scale;
     new_quad.vertices[1].x = x - this->scale;
@@ -171,16 +177,19 @@ int PolygonLoader::addQuadAt(float x, float y) {
         new_quad.heap_vertex_data[index++] = new_quad.vertices[i].y;
     }
     printFloatArr(new_quad.heap_vertex_data, 8);
-    int n_vao = this->addQuadToVertexBuffer(new_quad);
-    new_quad.vao_id = n_vao;
+    this->addQuadToVertexBuffer(new_quad);
     this->quads.push_back(new_quad);
     return new_idx;
 }
 
 int PolygonLoader::moveQuadTo(int quad_id, float x, float y) {
-    LOG("Move quad " + std::to_string(quad_id) + " to " + std::to_string(x) + " " + std::to_string(y) + "\n");
-    quad_t quad = this->quads[quad_id];
+    LOG("Move quad " + std::to_string(quad_id) + " to " + std::to_string(x) + " " + std::to_string(y));
+    quad_t& quad = this->quads[quad_id];
+    quad.center_x = x;
+    quad.center_y = y;
+    LOG("Binding vao with id " + std::to_string(quad.vao_id));
     glBindVertexArray(quad.vao_id);
+    glBindBuffer(GL_ARRAY_BUFFER, quad.vbo_id);
     quad.vertices[0].x = x - this->scale;
     quad.vertices[0].y = y - this->scale;
     quad.vertices[1].x = x - this->scale;
@@ -195,6 +204,13 @@ int PolygonLoader::moveQuadTo(int quad_id, float x, float y) {
         quad.heap_vertex_data[index++] = quad.vertices[i].y;
     }
     glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(float), quad.heap_vertex_data, GL_DYNAMIC_DRAW);
+    glBindVertexArray(0);
+}
+
+std::pair<float, float> PolygonLoader::getQuadCoordinates(int quad_id) {
+    quad_t quad = this->quads[quad_id];
+    std::pair<float, float> ret = std::make_pair(quad.center_x, quad.center_y);
+    return ret;
 }
 
 void PolygonLoader::printQuad(quad_t quad) {

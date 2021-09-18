@@ -24,6 +24,8 @@ public:
     int renderQuadAt(float x, float y);
 
     int moveQuadTo(int quad_vao_id, float x, float y);
+
+    std::pair<float, float> getQuadCoordinates(int quad_id);
 private:
     typedef struct quad_vertex {
         float x;
@@ -35,12 +37,15 @@ private:
         quad_vertex_t vertices[4];
         float *heap_vertex_data;
         GLuint vao_id;
+        GLuint vbo_id;
+        float center_x;
+        float center_y;
     } quad_t;
     
     void printQuad(quad_t quad);
     void printFloatArr(float f[], int size);
 
-    int addQuadToVertexBuffer(quad_t quad);
+    void addQuadToVertexBuffer(quad_t& quad);
 
     const char* read_shader_from_source(std::string filename);
     int compile_shader(int shader, const char *src);

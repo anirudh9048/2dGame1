@@ -9,6 +9,7 @@ Download the SDL2.framework folder and copy it to /Library/Frameworks.
 To compile: 
     g++ -framework SDL2 -F./dependencies -framework OpenGL -I ./include/ src/main.cpp -o main
     g++ -std=c++11 -framework SDL2 -F./dependencies -framework OpenGL -I ./include/ src/* -o main
+    g++ -std=c++11 -framework SDL2 -F./dependencies -framework OpenGL -I ./include/ src/* -o main
 
 Download the SDL2.framework folder and copy it to /Library/Frameworks
 

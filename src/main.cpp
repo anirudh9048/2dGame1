@@ -76,7 +76,7 @@ int main() {
         glGetString(GL_VERSION)    // e.g. 3.2 INTEL-8.0.61
     );
 
-    glClearColor(0,0,1,1);
+    glClearColor(0,0,0,1);
     glClear(GL_COLOR_BUFFER_BIT);
     std::shared_ptr<PolygonLoader> polygonLoader = std::make_shared<PolygonLoader>();
     polygonLoader->initPolygonLoader();
@@ -101,7 +101,7 @@ int main() {
                 LOG("SDL KEYDOWN received");
                 if (e.key.keysym.sym == SDLK_LEFT) {
                     LOG("moving rectangle");
-                    polygonLoader->moveQuadTo(second_quad, -0.1f, -0.1f);
+                    polygonLoader->moveQuadTo(second_quad, 0.0f, 0.0f);
                 }
             }
         }
