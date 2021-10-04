@@ -12,6 +12,8 @@
 #define LOG_ENABLED
 #include "Log.h"
 
+#ifndef POLYLOADER
+#define POLYLOADER
 class PolygonLoader {
 public:
     PolygonLoader();
@@ -64,3 +66,4 @@ private:
     float camera_x = 0.0f;
     float camera_y = 0.0f;
 };
+#endif

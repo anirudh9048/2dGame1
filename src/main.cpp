@@ -8,6 +8,7 @@
 #include "Log.h"
 #include "Window.h"
 #include "PolygonLoader.h"
+#include "EventHandler.h"
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
 #include <GLUT/glut.h> 
@@ -87,7 +88,10 @@ int main() {
 
     int third_quad = polygonLoader->addQuadAt(0.4f, -0.4f);
 
+    int fourth_quad = polygonLoader->addQuadAt(-0.7f, 0.5f);
+
     SDL_Event e;
+    std::shared_ptr<EventHandler> eventHandler = std::make_shared<EventHandler>(polygonLoader, std::make_pair<float, float>(0.0f, 0.0f)); 
     bool quit = false;
     while (!quit){
         while (SDL_PollEvent(&e)){
@@ -97,17 +101,12 @@ int main() {
             if (e.type == SDL_MOUSEBUTTONDOWN){
                 quit = true;
             }
-            if (e.type == SDL_KEYDOWN) {
-                LOG("SDL KEYDOWN received");
-                if (e.key.keysym.sym == SDLK_LEFT) {
-                    LOG("moving rectangle");
-                    polygonLoader->moveQuadTo(second_quad, 0.0f, 0.0f);
-                }
-            }
+            eventHandler->handle_event(e, third_quad);
         }
         glClear(GL_COLOR_BUFFER_BIT);
         polygonLoader->renderQuadAtWorldCoord(second_quad);
         polygonLoader->renderQuadAtWorldCoord(third_quad);
+        polygonLoader->renderQuadAtWorldCoord(fourth_quad);
         SDL_GL_SwapWindow(window->getSdlWindow());
     }
     return 0;
