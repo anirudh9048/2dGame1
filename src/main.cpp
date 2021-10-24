@@ -18,40 +18,6 @@
 
 
 
-GLubyte indices[] = {0,1,2,
-                     2,3,0};
-
-int compile_shader(int shader, const char *src) {
-    glShaderSource(shader, 1, &src, NULL);
-    glCompileShader(shader);
-    GLint status;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
-    if (!(status == GL_TRUE)) {
-        std::cout << "ERROR COMPILING SHADER\n";
-        char buffer[512];
-        glGetShaderInfoLog(shader, 512, NULL, buffer);
-        std::cout << buffer << std::endl;
-        return -1;
-    }
-
-    return 0;
-}
-
-const char* read_shader_from_source(std::string filename) {
-    std::ifstream file(filename);
-    if (!file.good()) {
-        std::cout << "ERROR opening file " << filename << std::endl;
-        return nullptr;
-    }
-    file.seekg(0, file.end);
-    int filelength = file.tellg();
-    file.seekg(0, file.beg);
-    char *st = new char[filelength+1];
-    file.read(st, filelength);
-    st[filelength] = '\0';
-    return st;
-}
-
 int setupSdl() {
     int result = SDL_Init(SDL_INIT_EVERYTHING);
     SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE); //OpenGL core profile
@@ -62,6 +28,7 @@ int setupSdl() {
 
 int main() {
     LOG("Launching app...");
+    
     int result = setupSdl();
     if (result < 0) {
         std::cout << "ERROR: setting up sdl\n";
@@ -84,11 +51,11 @@ int main() {
 
     polygonLoader->setCameraCoordinate(0.0f, 0.0f);
 
-    int second_quad = polygonLoader->addQuadAt(0.3f, 0.9f);
+    int second_quad = polygonLoader->addQuadAt(0.3f, 0.9f, 0.1f, 0.1f);
 
-    int third_quad = polygonLoader->addQuadAt(0.4f, -0.4f);
+    int third_quad = polygonLoader->addQuadAt(0.4f, -0.4f, 0.2f, 0.1f);
 
-    int fourth_quad = polygonLoader->addQuadAt(-0.7f, 0.5f);
+    int fourth_quad = polygonLoader->addQuadAt(-0.7f, 0.5f, 0.8f, 0.4f);
 
     SDL_Event e;
     std::shared_ptr<EventHandler> eventHandler = std::make_shared<EventHandler>(polygonLoader, std::make_pair<float, float>(0.0f, 0.0f)); 

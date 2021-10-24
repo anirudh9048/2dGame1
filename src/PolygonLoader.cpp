@@ -156,20 +156,22 @@ void PolygonLoader::addQuadToVertexBuffer(PolygonLoader::quad_t& quad) {
     return;
 }
 
-int PolygonLoader::addQuadAt(float x, float y) {
+int PolygonLoader::addQuadAt(float x, float y, float width, float height) {
     int new_idx = this->quads.size();
     quad_t new_quad;
     new_quad.quad_id = new_idx;
     new_quad.center_x = x;
     new_quad.center_y = y;
-    new_quad.vertices[0].x = x - this->scale;
-    new_quad.vertices[0].y = y - this->scale;
-    new_quad.vertices[1].x = x - this->scale;
-    new_quad.vertices[1].y = y + this->scale;
-    new_quad.vertices[2].x = x + this->scale;
-    new_quad.vertices[2].y = y - this->scale;
-    new_quad.vertices[3].x = x + this->scale;
-    new_quad.vertices[3].y = y + this->scale;
+    new_quad.width = width;
+    new_quad.height = height;
+    new_quad.vertices[0].x = x - width / 2;
+    new_quad.vertices[0].y = y - height / 2;
+    new_quad.vertices[1].x = x - width / 2;
+    new_quad.vertices[1].y = y + height / 2;
+    new_quad.vertices[2].x = x + width / 2;
+    new_quad.vertices[2].y = y - height / 2;
+    new_quad.vertices[3].x = x + width / 2;
+    new_quad.vertices[3].y = y + height / 2;
     new_quad.heap_vertex_data = new float[8]; //todo replace with constant
     int index = 0;
     for (int i = 0; i < 4; i++) {
@@ -190,14 +192,14 @@ int PolygonLoader::moveQuadTo(int quad_id, float x, float y) {
     LOG("Binding vao with id " + std::to_string(quad.vao_id));
     glBindVertexArray(quad.vao_id);
     glBindBuffer(GL_ARRAY_BUFFER, quad.vbo_id);
-    quad.vertices[0].x = x - this->scale;
-    quad.vertices[0].y = y - this->scale;
-    quad.vertices[1].x = x - this->scale;
-    quad.vertices[1].y = y + this->scale;
-    quad.vertices[2].x = x + this->scale;
-    quad.vertices[2].y = y - this->scale;
-    quad.vertices[3].x = x + this->scale;
-    quad.vertices[3].y = y + this->scale;
+    quad.vertices[0].x = x - quad.width / 2;
+    quad.vertices[0].y = y - quad.height / 2;
+    quad.vertices[1].x = x - quad.width / 2;
+    quad.vertices[1].y = y + quad.height / 2;
+    quad.vertices[2].x = x + quad.width / 2;
+    quad.vertices[2].y = y - quad.height / 2;
+    quad.vertices[3].x = x + quad.width / 2;
+    quad.vertices[3].y = y + quad.height / 2;
     int index = 0;
     for (int i = 0; i < 4; i++) {
         quad.heap_vertex_data[index++] = quad.vertices[i].x;

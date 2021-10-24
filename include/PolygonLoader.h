@@ -22,7 +22,7 @@ public:
 
     int renderQuadAtWorldCoord(int quad_id);
     int setCameraCoordinate(float x, float y);
-    int addQuadAt(float x, float y); // returns the quad_id to the caller
+    int addQuadAt(float x, float y, float width, float height); // returns the quad_id to the caller
     int renderQuadAt(float x, float y);
 
     int moveQuadTo(int quad_vao_id, float x, float y);
@@ -42,6 +42,8 @@ private:
         GLuint vbo_id;
         float center_x;
         float center_y;
+        float width;
+        float height;
     } quad_t;
     
     void printQuad(quad_t quad);
