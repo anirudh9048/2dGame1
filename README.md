@@ -35,4 +35,5 @@ Put the following matrix into a shader:
 How do we pass in the camera_pos vertex attribute to the shader? https://www.informit.com/articles/article.aspx?p=2429029
 
 Seems to be ok. Up next: draw multiple rectangles to the screen.
-Need to fill one VBO with the vertices for many rectangles.
+
+Done. Can draw multiple rectanlges to the screen. Can move one of the rectangles and camera as well.
