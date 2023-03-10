@@ -50,12 +50,17 @@ int main() {
     polygonLoader->initPolygonLoader();
 
     polygonLoader->setCameraCoordinate(0.0f, 0.0f);
+    int player_quad = polygonLoader->addQuadAt(0.4f, -0.4f, 0.05f, 0.05f); 
 
-    int second_quad = polygonLoader->addQuadAt(0.3f, 0.9f, 0.1f, 0.1f);
+    std::vector<int> world_quads;
 
-    int third_quad = polygonLoader->addQuadAt(0.4f, -0.4f, 0.2f, 0.1f);
+    // int second_quad = polygonLoader->addQuadAt(0.3f, 0.9f, 0.1f, 0.1f);
+    world_quads.push_back(polygonLoader->addQuadAt(0.3f, 0.9f, 0.1f, 0.1f));
+    
 
-    int fourth_quad = polygonLoader->addQuadAt(-0.7f, 0.5f, 0.8f, 0.4f);
+    world_quads.push_back(polygonLoader->addQuadAt(-0.7f, 0.5f, 0.8f, 0.4f));
+
+    world_quads.push_back(polygonLoader->addQuadAt(0.4f,0.5f, 0.3f, 0.2f));
 
     SDL_Event e;
     std::shared_ptr<EventHandler> eventHandler = std::make_shared<EventHandler>(polygonLoader, std::make_pair<float, float>(0.0f, 0.0f)); 
@@ -68,12 +73,13 @@ int main() {
             if (e.type == SDL_MOUSEBUTTONDOWN){
                 quit = true;
             }
-            eventHandler->handle_event(e, third_quad);
+            eventHandler->handle_event(e, player_quad);
         }
         glClear(GL_COLOR_BUFFER_BIT);
-        polygonLoader->renderQuadAtWorldCoord(second_quad);
-        polygonLoader->renderQuadAtWorldCoord(third_quad);
-        polygonLoader->renderQuadAtWorldCoord(fourth_quad);
+        polygonLoader->renderQuadAtWorldCoord(player_quad);
+        for (int qid : world_quads) {
+            polygonLoader->renderQuadAtWorldCoord(qid);
+        }
         SDL_GL_SwapWindow(window->getSdlWindow());
     }
     return 0;

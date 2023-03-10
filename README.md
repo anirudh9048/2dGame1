@@ -36,4 +36,4 @@ How do we pass in the camera_pos vertex attribute to the shader? https://www.inf
 
 Seems to be ok. Up next: draw multiple rectangles to the screen.
 
-Done. Can draw multiple rectanlges to the screen. Can move one of the rectangles and camera as well.
+Done. Can draw multiple rectangles to the screen. Can move one of the rectangles and camera as well.

@@ -13,22 +13,23 @@ int PolygonLoader::initPolygonLoader() {
     const char *vertexSource = read_shader_from_source("shaders/v2matrix.vert");
     const char *fragmentSource = read_shader_from_source("shaders/f1.frag");
 	
+    // ----- DON'T NEED ------
+    // GLuint vaoId = 0;
+    // glGenVertexArrays(1, &vaoId);
+    // glBindVertexArray(vaoId);
 
-    GLuint vaoId = 0;
-    glGenVertexArrays(1, &vaoId);
-    glBindVertexArray(vaoId);
+    // std::cout << (char *) gluErrorString(glGetError()) << std::endl;
 
-    std::cout << (char *) gluErrorString(glGetError()) << std::endl;
+    // GLuint vbo;
+    // glGenBuffers(1, &vbo);
+    // glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    // glEnableVertexAttribArray(0);
 
-    GLuint vbo;
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glEnableVertexAttribArray(0);
-
-    glBufferData(GL_ARRAY_BUFFER, this->NUM_VERTICES * sizeof(float), this->vertices, GL_DYNAMIC_DRAW);
+    // glBufferData(GL_ARRAY_BUFFER, this->NUM_VERTICES * sizeof(float), this->vertices, GL_DYNAMIC_DRAW);
 
     
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    // glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    // ------------------------
     
     
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -94,6 +95,7 @@ int PolygonLoader::renderTriangleAt(float x, float y) {
 }
 
 // Render at world coordinate
+// DEPRECATED : use renderQuadAtWorldCoord instead
 int PolygonLoader::renderQuadAt(float x, float y) {
     glClear(GL_COLOR_BUFFER_BIT);
     this->vertices[0] = x - this->scale;
@@ -131,8 +133,9 @@ int PolygonLoader::renderQuadAtWorldCoord(int quad_id) {
     return 0;
 }
 
-// this function is a bit of a misnomer
+// this function name is a bit of a misnomer
 // this should really be adding a new vertex buffer (along with new VAO) ???
+// it really should be called add vertex buffer to quad
 void PolygonLoader::addQuadToVertexBuffer(PolygonLoader::quad_t& quad) {
     GLuint vao_new = 1; //the initialization really shouldn't matter; double check this
     glGenVertexArrays(1, &vao_new);
@@ -146,6 +149,13 @@ void PolygonLoader::addQuadToVertexBuffer(PolygonLoader::quad_t& quad) {
 
     glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(float), quad.heap_vertex_data, GL_DYNAMIC_DRAW);
 
+    // defining an array of generic vertex data
+    // index :  index of generic vertex attr to be modified 0 -> world pos, 1 -> camera coordinate
+    // size : # of components per vertex attr
+    // type
+    // normalized : 
+    // stride : 0 --> tightly packed byte offset between values
+    // pointer
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
     glBindVertexArray(0);

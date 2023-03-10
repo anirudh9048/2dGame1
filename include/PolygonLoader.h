@@ -19,15 +19,20 @@ public:
     PolygonLoader();
     ~PolygonLoader();
     int initPolygonLoader();
+    int setCameraCoordinate(float x, float y);
 
     int renderQuadAtWorldCoord(int quad_id);
-    int setCameraCoordinate(float x, float y);
     int addQuadAt(float x, float y, float width, float height); // returns the quad_id to the caller
     int renderQuadAt(float x, float y);
-
     int moveQuadTo(int quad_vao_id, float x, float y);
-
     std::pair<float, float> getQuadCoordinates(int quad_id);
+
+
+    int renderLineAtWorldCoord(int line_id);
+    int addLineAt(float x1, float y1, float x2, float y2);
+    int moveLineTo(int line_id, float x1, float y1, float x2, float y2);
+    std::pair<float, float> getLineCoordinates(int line_id);
+
 private:
     typedef struct quad_vertex {
         float x;
@@ -57,13 +62,13 @@ private:
 
     std::vector<quad_t> quads;
 
-    int NUM_VERTICES = 8; // actual number of vertices is this div by 2? 8 const?
+    int NUM_VERTICES = 8; // actual number of vertices is this div by 2
     float scale = 0.1f;
     float *vertices;
     GLuint vertexShader;
     GLuint fragmentShader;
-    float xCoord = 0.0f;
-    float yCoord = 0.0f;
+    // float xCoord = 0.0f;
+    // float yCoord = 0.0f;
 
     float camera_x = 0.0f;
     float camera_y = 0.0f;
