@@ -62,6 +62,25 @@ private:
 
     std::vector<quad_t> quads;
 
+
+    typedef struct point {
+        float x;
+        float y;
+    } point_t;
+
+    typedef struct line {
+        int line_id;
+        point_t p1;
+        point_t p2;
+        float *heap_point_data;
+        GLuint vaoid;
+        GLuint vboid;
+    } line_t;
+
+    std::vector<line_t> lines;
+
+    void setLineVertexBuffers(line_t& _line);
+
     int NUM_VERTICES = 8; // actual number of vertices is this div by 2
     float scale = 0.1f;
     float *vertices;

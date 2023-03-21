@@ -53,6 +53,7 @@ int main() {
     int player_quad = polygonLoader->addQuadAt(0.4f, -0.4f, 0.05f, 0.05f); 
 
     std::vector<int> world_quads;
+    std::vector<int> world_lines;
 
     // int second_quad = polygonLoader->addQuadAt(0.3f, 0.9f, 0.1f, 0.1f);
     world_quads.push_back(polygonLoader->addQuadAt(0.3f, 0.9f, 0.1f, 0.1f));
@@ -61,6 +62,8 @@ int main() {
     world_quads.push_back(polygonLoader->addQuadAt(-0.7f, 0.5f, 0.8f, 0.4f));
 
     world_quads.push_back(polygonLoader->addQuadAt(0.4f,0.5f, 0.3f, 0.2f));
+
+    world_lines.push_back(polygonLoader->addLineAt(0.5f, -0.5f, 0.2f, 0.1f));
 
     SDL_Event e;
     std::shared_ptr<EventHandler> eventHandler = std::make_shared<EventHandler>(polygonLoader, std::make_pair<float, float>(0.0f, 0.0f)); 
@@ -79,6 +82,9 @@ int main() {
         polygonLoader->renderQuadAtWorldCoord(player_quad);
         for (int qid : world_quads) {
             polygonLoader->renderQuadAtWorldCoord(qid);
+        }
+        for (int lid : world_lines) {
+            polygonLoader->renderLineAtWorldCoord(lid);
         }
         SDL_GL_SwapWindow(window->getSdlWindow());
     }

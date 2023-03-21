@@ -234,10 +234,59 @@ void PolygonLoader::printQuad(quad_t quad) {
     LOG(str);
 }
 
- void PolygonLoader::printFloatArr(float f[], int size) {
+void PolygonLoader::printFloatArr(float f[], int size) {
     std::string s = ""; 
     for (int i = 0; i < size; i++) {
-        s += std::to_string(f[i]) + ", ";
+    s += std::to_string(f[i]) + ", ";
     }
     LOG(s);
- }
+}
+
+
+void PolygonLoader::setLineVertexBuffers(PolygonLoader::line_t& _line) {
+    GLuint vao_id = 1;
+    glGenVertexArrays(1, &vao_id);
+    glBindVertexArray(vao_id);
+
+    GLuint vbo_id = 1;
+    glGenBuffers(1, &vbo_id);
+
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 4, _line.heap_point_data, GL_DYNAMIC_DRAW);
+    
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+    _line.vaoid = vao_id;
+    _line.vboid = vbo_id;
+    glBindVertexArray(0);
+    
+}
+
+int PolygonLoader::renderLineAtWorldCoord(int line_id) {
+    line_t l = this->lines[line_id];
+    glBindVertexArray(l.vaoid);
+    glDrawArrays(GL_LINES, 0, 2);
+    glBindVertexArray(0);
+}
+
+int PolygonLoader::addLineAt(float x1, float y1, float x2, float y2) {
+    int line_id = this->lines.size();
+    line_t new_line;
+    new_line.p1 = point_t{x1,y1};
+    new_line.p2 = point_t{x2,y2};
+    new_line.line_id = line_id;
+    new_line.heap_point_data = new float[4];
+    new_line.heap_point_data[0] = x1;
+    new_line.heap_point_data[1] = y1;
+    new_line.heap_point_data[2] = x2;
+    new_line.heap_point_data[3] = y2;
+    this->setLineVertexBuffers(new_line);
+    this->lines.push_back(new_line);
+    return line_id;
+}
+
+int PolygonLoader::moveLineTo(int line_id, float x1, float y1, float x2, float y2) {}
+
+std::pair<float, float> PolygonLoader::getLineCoordinates(int line_id) {}
