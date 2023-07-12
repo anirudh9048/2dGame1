@@ -12,7 +12,12 @@ class EventHandler {
 private:
     std::shared_ptr<PolygonLoader> polygonLoader;
     std::pair<float, float> currentCameraPosition; 
+
+    SDL_Event event;
+    bool quit;
 public:
-    void handle_event(SDL_Event e, int quad_id);
+    void handle_event(int quad_id);
     EventHandler(std::shared_ptr<PolygonLoader> polygonLoader, std::pair<float, float> camera);
+    int poll();
+    bool getQuit();
 };

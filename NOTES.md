@@ -33,3 +33,9 @@ while(g.is_running()) {
 }
 
 Can probably get rid of the EventHandler. Have the game handle the events. However, the game can have a PolygonLoader. 
+
+while(running) {
+    // handle events
+    // update internal state according to events
+    // render
+}

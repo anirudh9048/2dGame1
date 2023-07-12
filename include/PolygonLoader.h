@@ -22,7 +22,7 @@ public:
     int setCameraCoordinate(float x, float y);
 
     int renderQuadAtWorldCoord(int quad_id);
-    int addQuadAt(float x, float y, float width, float height); // returns the quad_id to the caller
+    int addQuadAt(float x, float y, float width, float height, float clr[]); // returns the quad_id to the caller
     int renderQuadAt(float x, float y);
     int moveQuadTo(int quad_vao_id, float x, float y);
     std::pair<float, float> getQuadCoordinates(int quad_id);
@@ -54,7 +54,7 @@ private:
     void printQuad(quad_t quad);
     void printFloatArr(float f[], int size);
 
-    void addQuadToVertexBuffer(quad_t& quad);
+    void addQuadToVertexBuffer(quad_t& quad, GLfloat quad_color[]);
 
     const char* read_shader_from_source(std::string filename);
     int compile_shader(int shader, const char *src);

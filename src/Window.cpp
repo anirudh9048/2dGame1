@@ -27,6 +27,10 @@ SDL_Window* Window::getSdlWindow() {
     return this->window;
 }
 
+void Window::swapWindow() {
+    SDL_GL_SwapWindow(this->window);
+}
+
 Window::~Window() {
     if (this->context != nullptr) {
         SDL_GL_DeleteContext(this->context);

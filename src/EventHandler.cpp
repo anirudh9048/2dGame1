@@ -8,44 +8,56 @@ EventHandler::EventHandler(std::shared_ptr<PolygonLoader> polygonLoader,  std::p
 
 
 
-void EventHandler::handle_event(SDL_Event e, int quad_id) {
-    if (e.type == SDL_KEYDOWN) {
+void EventHandler::handle_event(int quad_id) {
+    if (this->event.type == SDL_KEYDOWN) {
         LOG("SDL KEYDOWN received");
-        if (e.key.keysym.sym == SDLK_LEFT) {
+        if (this->event.key.keysym.sym == SDLK_LEFT) {
             LOG("move left");
             std::pair<float, float> coords = polygonLoader->getQuadCoordinates(quad_id);
             polygonLoader->moveQuadTo(quad_id, coords.first - 0.01f, coords.second);
         }
-        if (e.key.keysym.sym == SDLK_RIGHT) {
+        if (this->event.key.keysym.sym == SDLK_RIGHT) {
             LOG("move right");
             std::pair<float, float> coords = polygonLoader->getQuadCoordinates(quad_id);
             polygonLoader->moveQuadTo(quad_id, coords.first + 0.01f, coords.second);
         }
-        if (e.key.keysym.sym == SDLK_DOWN) {
+        if (this->event.key.keysym.sym == SDLK_DOWN) {
             LOG("move down");
             std::pair<float, float> coords = polygonLoader->getQuadCoordinates(quad_id);
             polygonLoader->moveQuadTo(quad_id, coords.first, coords.second - 0.01f);
         }
-        if (e.key.keysym.sym == SDLK_UP) {
+        if (this->event.key.keysym.sym == SDLK_UP) {
             LOG("move up");
             std::pair<float, float> coords = polygonLoader->getQuadCoordinates(quad_id);
             polygonLoader->moveQuadTo(quad_id, coords.first, coords.second + 0.01f);
         }
-        if (e.key.keysym.sym == SDLK_w) {
+        if (this->event.key.keysym.sym == SDLK_w) {
             polygonLoader->setCameraCoordinate(currentCameraPosition.first, currentCameraPosition.second + 0.01f);
             currentCameraPosition.second += 0.01f;
         }
-        if (e.key.keysym.sym == SDLK_a) {
+        if (this->event.key.keysym.sym == SDLK_a) {
             polygonLoader->setCameraCoordinate(currentCameraPosition.first - 0.01f, currentCameraPosition.second);
             currentCameraPosition.first -= 0.01f;
         }
-        if (e.key.keysym.sym == SDLK_s) {
+        if (this->event.key.keysym.sym == SDLK_s) {
             polygonLoader->setCameraCoordinate(currentCameraPosition.first, currentCameraPosition.second - 0.01f);
             currentCameraPosition.second -= 0.01f;
         }
-        if (e.key.keysym.sym == SDLK_d) {
+        if (this->event.key.keysym.sym == SDLK_d) {
             polygonLoader->setCameraCoordinate(currentCameraPosition.first + 0.01f, currentCameraPosition.second);
             currentCameraPosition.first += 0.01f;
         }
     }
+}
+
+int EventHandler::poll() {
+    int poll_return = SDL_PollEvent(&this->event);
+    if (this->event.type == SDL_QUIT || this->event.type == SDL_MOUSEBUTTONDOWN){
+        this->quit = true;
+    }
+    return poll_return;
+}
+
+bool EventHandler::getQuit() {
+    return this->quit;
 }

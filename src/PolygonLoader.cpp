@@ -50,6 +50,10 @@ int PolygonLoader::initPolygonLoader() {
     glGetProgramiv(shaderProgram, GL_LINK_STATUS, &isLinked);
     if (isLinked == GL_FALSE) {
         std::cout << "ERROR linking\n";
+        char buffer[512];
+        glGetProgramInfoLog (shaderProgram, 512, NULL, buffer);
+        std::cout << buffer << std::endl;
+        return -1;
     }
 
     glUseProgram(shaderProgram);
@@ -136,7 +140,15 @@ int PolygonLoader::renderQuadAtWorldCoord(int quad_id) {
 // this function name is a bit of a misnomer
 // this should really be adding a new vertex buffer (along with new VAO) ???
 // it really should be called add vertex buffer to quad
-void PolygonLoader::addQuadToVertexBuffer(PolygonLoader::quad_t& quad) {
+void PolygonLoader::addQuadToVertexBuffer(PolygonLoader::quad_t& quad, GLfloat quad_color[]) {
+
+    GLfloat color[] = {
+        quad_color[0],quad_color[1],quad_color[2],
+        quad_color[0],quad_color[1],quad_color[2],
+        quad_color[0],quad_color[1],quad_color[2],
+        quad_color[0],quad_color[1],quad_color[2]
+    }; // one rgb per vertex
+
     GLuint vao_new = 1; //the initialization really shouldn't matter; double check this
     glGenVertexArrays(1, &vao_new);
     glBindVertexArray(vao_new);
@@ -158,6 +170,13 @@ void PolygonLoader::addQuadToVertexBuffer(PolygonLoader::quad_t& quad) {
     // pointer
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
+    GLuint vbo_color;
+    glGenBuffers(1, &vbo_color);
+    glEnableVertexAttribArray(2);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_color);
+    glBufferData(GL_ARRAY_BUFFER, 12*sizeof(float), color, GL_DYNAMIC_DRAW);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
     glBindVertexArray(0);
 
     quad.vao_id = vao_new;
@@ -166,7 +185,7 @@ void PolygonLoader::addQuadToVertexBuffer(PolygonLoader::quad_t& quad) {
     return;
 }
 
-int PolygonLoader::addQuadAt(float x, float y, float width, float height) {
+int PolygonLoader::addQuadAt(float x, float y, float width, float height, float clr[]) {
     int new_idx = this->quads.size();
     quad_t new_quad;
     new_quad.quad_id = new_idx;
@@ -189,7 +208,7 @@ int PolygonLoader::addQuadAt(float x, float y, float width, float height) {
         new_quad.heap_vertex_data[index++] = new_quad.vertices[i].y;
     }
     printFloatArr(new_quad.heap_vertex_data, 8);
-    this->addQuadToVertexBuffer(new_quad);
+    this->addQuadToVertexBuffer(new_quad, clr);
     this->quads.push_back(new_quad);
     return new_idx;
 }
@@ -287,6 +306,18 @@ int PolygonLoader::addLineAt(float x1, float y1, float x2, float y2) {
     return line_id;
 }
 
-int PolygonLoader::moveLineTo(int line_id, float x1, float y1, float x2, float y2) {}
+int PolygonLoader::moveLineTo(int line_id, float x1, float y1, float x2, float y2) {
+    line_t& line = this->lines[line_id];
+    glBindVertexArray(line.vaoid);
+    glBindBuffer(GL_ARRAY_BUFFER, line.vboid);
+    line.p1 = point_t{x1,y1};
+    line.p2 = point_t{x2,y2};
+    line.heap_point_data[0] = x1;
+    line.heap_point_data[1] = y1;
+    line.heap_point_data[2] = x2;
+    line.heap_point_data[3] = y2;
+    glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(float), line.heap_point_data, GL_DYNAMIC_DRAW);
+    
+}
 
 std::pair<float, float> PolygonLoader::getLineCoordinates(int line_id) {}

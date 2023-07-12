@@ -1,7 +1,9 @@
 #version 330 core
 
 in vec2 world_pos;
+in vec3 colorIn;
 in vec2 camera_pos;
+out vec3 colorOut;
 
 void main() 
 {
@@ -13,4 +15,5 @@ void main()
   );  
   vec3 op_gl_coord = transform_mat * world_pos_hmg;
   gl_Position = vec4(op_gl_coord, 1.0);
+  colorOut = colorIn;
 }

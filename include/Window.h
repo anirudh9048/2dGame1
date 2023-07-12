@@ -11,6 +11,7 @@ public:
 
     int createSDLWindowAndContext();
     SDL_Window* getSdlWindow();
+    void swapWindow();
 
 private:
     SDL_Window *window = nullptr;
